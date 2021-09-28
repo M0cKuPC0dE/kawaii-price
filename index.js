@@ -55,9 +55,9 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
         //fields
         await getActions('fields').then(async r => {
             const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !FIELDS.includes(r.items[0].tokenId)) {
-                FIELDS.push(r.items[0].tokenId);
-                await send("FIELDS " + r.items[0].tokenId + " PRICE " + price + " AIRI");
+            if (price < 1000 && !FIELDS.includes(r.items[0].indexToken)) {
+                FIELDS.push(r.items[0].indexToken);
+                await send("FIELD " + r.items[0].tokenId + " PRICE " + price + " AIRI");
             }
         }).catch(e => {
             log.error('FETCH ERROR', e)
@@ -66,9 +66,9 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
         //trees
         await getActions('trees').then(async r => {
             const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !PLANTS.includes(r.items[0].tokenId)) {
-                PLANTS.push(r.items[0].tokenId);
-                await send("TREES " + r.items[0].tokenId + " PRICE " + price + " AIRI");
+            if (price < 1000 && !PLANTS.includes(r.items[0].indexToken)) {
+                PLANTS.push(r.items[0].indexToken);
+                await send("TREE " + r.items[0].tokenId + " PRICE " + price + " AIRI");
             }
         }).catch(e => {
             log.error('FETCH ERROR', e)
@@ -77,9 +77,9 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
         //animals
         await getActions('animals').then(async r => {
             const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !ANIMALS.includes(r.items[0].tokenId)) {
-                ANIMALS.push(r.items[0].tokenId);
-                await send("ANIMALS " + r.items[0].tokenId + "  PRICE " + price + " AIRI");
+            if (price < 1000 && !ANIMALS.includes(r.items[0].indexToken)) {
+                ANIMALS.push(r.items[0].indexToken);
+                await send("ANIMAL " + r.items[0].tokenId + "  PRICE " + price + " AIRI");
             }
         }).catch(e => {
             log.error('FETCH ERROR', e)
