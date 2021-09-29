@@ -49,7 +49,7 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
 
 (async () => {
 
-    await send("Hi");
+    // await send("Hi");
 
     while (true) {
         //fields
@@ -57,10 +57,10 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
             const price = r.items[0].endingPrice / WEI;
             if (price < 1000 && !FIELDS.includes(r.items[0].indexToken)) {
                 FIELDS.push(r.items[0].indexToken);
-                await send("FIELD " + r.items[0].tokenId + " PRICE " + price + " AIRI");
+                await send("FIELD " + r.items[0].tokenId + " PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
             }
         }).catch(e => {
-            log.error('FETCH ERROR', e)
+            console.log('FETCH ERROR', e)
         });
 
         //trees
@@ -68,10 +68,10 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
             const price = r.items[0].endingPrice / WEI;
             if (price < 1000 && !PLANTS.includes(r.items[0].indexToken)) {
                 PLANTS.push(r.items[0].indexToken);
-                await send("TREE " + r.items[0].tokenId + " PRICE " + price + " AIRI");
+                await send("TREE " + r.items[0].tokenId + " PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
             }
         }).catch(e => {
-            log.error('FETCH ERROR', e)
+            console.log('FETCH ERROR', e)
         });
 
         //animals
@@ -79,10 +79,10 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
             const price = r.items[0].endingPrice / WEI;
             if (price < 1000 && !ANIMALS.includes(r.items[0].indexToken)) {
                 ANIMALS.push(r.items[0].indexToken);
-                await send("ANIMAL " + r.items[0].tokenId + "  PRICE " + price + " AIRI");
+                await send("ANIMAL " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
             }
         }).catch(e => {
-            log.error('FETCH ERROR', e)
+            console.log('FETCH ERROR', e)
         });
 
         await new Promise(r => setTimeout(r, 10 * 1000));
