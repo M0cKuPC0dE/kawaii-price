@@ -27,9 +27,12 @@ const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight
     .catch(e => { console.error('FETCH ERROR', e) })
 );
 
-const FIELDS = [];
-const PLANTS = [];
-const ANIMALS = [];
+var FIELDS = [];
+var PLANTS = [];
+var ANIMALS = [];
+var MATERIALS = [];
+var DYES = [];
+var DECORS = [];
 
 const TELEGRAM_TOKEN = '';
 
@@ -88,8 +91,8 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
         //materials
         await getActions('animals').then(async r => {
             const price = r.items[0].endingPrice / WEI;
-            if (price < 100 && !ANIMALS.includes(r.items[0].indexToken)) {
-                ANIMALS.push(r.items[0].indexToken);
+            if (price < 100 && !MATERIALS.includes(r.items[0].indexToken)) {
+                MATERIALS.push(r.items[0].indexToken);
                 await send("MATERIALS " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
             }
         }).catch(e => {
@@ -99,8 +102,8 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
         //dyes
         await getActions('dyes').then(async r => {
             const price = r.items[0].endingPrice / WEI;
-            if (price < 50 && !ANIMALS.includes(r.items[0].indexToken)) {
-                ANIMALS.push(r.items[0].indexToken);
+            if (price < 50 && !DYES.includes(r.items[0].indexToken)) {
+                DYES.push(r.items[0].indexToken);
                 await send("DYES " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
             }
         }).catch(e => {
@@ -110,8 +113,8 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
         //decors
         await getActions('decors').then(async r => {
             const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !ANIMALS.includes(r.items[0].indexToken)) {
-                ANIMALS.push(r.items[0].indexToken);
+            if (price < 500 && !DECORS.includes(r.items[0].indexToken)) {
+                DECORS.push(r.items[0].indexToken);
                 await send("DECORS " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
             }
         }).catch(e => {
