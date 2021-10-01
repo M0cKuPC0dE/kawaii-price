@@ -47,7 +47,7 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
 const find = async (category, limit) => {
     await getActions(category).then(async r => {
         for (let i = 0; i < r.items.length; i++) {
-            const price = r.items[i].endingPrice / WEI;
+            const price = r.items[i].startingPrice / WEI;
             if (price < limit && !CACHE.includes(r.items[i].tokenId + "-" + r.items[i].indexToken)) {
                 CACHE.push(r.items[i].tokenId + "-" + r.items[i].indexToken);
                 await send(category.toUpperCase() + " " + r.items[i].tokenId + " PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[i].tokenId + "/" + r.items[i].indexToken);
