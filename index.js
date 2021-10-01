@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const WEI = 1000000000000000000;
 
-const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight.io/v0/list_recent?category=${{ category }}`, {
+const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight.io/v0/list_recent?category=${category}`, {
     "headers": {
         "accept": "application/json, text/plain, */*",
         "accept-language": "en-US,en;q=0.9,th;q=0.8",
@@ -28,8 +28,7 @@ const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight
 );
 
 var CACHE = [];
-
-const TELEGRAM_TOKEN = 'bot2030591692:AAHqywGSMQzgeN56G3JbsRcDEjeD118cXDY';
+const TELEGRAM_TOKEN = '';
 
 const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
@@ -69,9 +68,9 @@ const find = async (category, limit) => {
         //animals
         await find('animals', 1000);
         //materials
-        await find('materials', 100);
+        await find('materials', 50);
         //dyes
-        await find('dyes', 100);
+        await find('dyes', 50);
         //decors
         await find('decors', 100);
         await new Promise(r => setTimeout(r, 5 * 1000));
