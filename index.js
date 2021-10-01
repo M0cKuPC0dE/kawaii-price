@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const WEI = 1000000000000000000;
 
-const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight.io/v0/list_auction?category=${category}&limit=10&page=0&sort=PriceEndAsc`, {
+const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight.io/v0/list_recent?category=${{ category }}`, {
     "headers": {
         "accept": "application/json, text/plain, */*",
         "accept-language": "en-US,en;q=0.9,th;q=0.8",
@@ -27,14 +27,9 @@ const getActions = (category) => (fetch(`https://kawaii-martketplace-api.airight
     .catch(e => { console.error('FETCH ERROR', e) })
 );
 
-var FIELDS = [];
-var PLANTS = [];
-var ANIMALS = [];
-var MATERIALS = [];
-var DYES = [];
-var DECORS = [];
+var CACHE = [];
 
-const TELEGRAM_TOKEN = '';
+const TELEGRAM_TOKEN = 'bot2030591692:AAHqywGSMQzgeN56G3JbsRcDEjeD118cXDY';
 
 const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
@@ -50,78 +45,36 @@ const send = (message) => (fetch(`https://api.telegram.org/${TELEGRAM_TOKEN}/sen
     .catch(e => { console.error('SEND MESSAGE ERROR', e) })
 );
 
-(async () => {
+const find = async (category, limit) => {
+    await getActions(category).then(async r => {
+        for (let i = 0; i < r.items.length; i++) {
+            const price = r.items[i].endingPrice / WEI;
+            if (price < limit && !CACHE.includes(r.items[i].tokenId + "-" + r.items[i].indexToken)) {
+                CACHE.push(r.items[i].tokenId + "-" + r.items[i].indexToken);
+                await send(category.toUpperCase() + " " + r.items[i].tokenId + " PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[i].tokenId + "/" + r.items[i].indexToken);
+            }
+        }
+    }).catch(e => {
+        console.log('FETCH ERROR', e)
+    });
+}
 
-    // await send("Hi");
+(async () => {
 
     while (true) {
         //fields
-        await getActions('fields').then(async r => {
-            const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !FIELDS.includes(r.items[0].indexToken)) {
-                FIELDS.push(r.items[0].indexToken);
-                await send("FIELD " + r.items[0].tokenId + " PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
-            }
-        }).catch(e => {
-            console.log('FETCH ERROR', e)
-        });
-
+        await find('fields', 1000);
         //trees
-        await getActions('trees').then(async r => {
-            const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !PLANTS.includes(r.items[0].indexToken)) {
-                PLANTS.push(r.items[0].indexToken);
-                await send("TREE " + r.items[0].tokenId + " PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
-            }
-        }).catch(e => {
-            console.log('FETCH ERROR', e)
-        });
-
+        await find('trees', 1000);
         //animals
-        await getActions('animals').then(async r => {
-            const price = r.items[0].endingPrice / WEI;
-            if (price < 1000 && !ANIMALS.includes(r.items[0].indexToken)) {
-                ANIMALS.push(r.items[0].indexToken);
-                await send("ANIMAL " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
-            }
-        }).catch(e => {
-            console.log('FETCH ERROR', e)
-        });
-
+        await find('animals', 1000);
         //materials
-        await getActions('animals').then(async r => {
-            const price = r.items[0].endingPrice / WEI;
-            if (price < 100 && !MATERIALS.includes(r.items[0].indexToken)) {
-                MATERIALS.push(r.items[0].indexToken);
-                await send("MATERIALS " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
-            }
-        }).catch(e => {
-            console.log('FETCH ERROR', e)
-        });
-
+        await find('materials', 100);
         //dyes
-        await getActions('dyes').then(async r => {
-            const price = r.items[0].endingPrice / WEI;
-            if (price < 50 && !DYES.includes(r.items[0].indexToken)) {
-                DYES.push(r.items[0].indexToken);
-                await send("DYES " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
-            }
-        }).catch(e => {
-            console.log('FETCH ERROR', e)
-        });
-
+        await find('dyes', 100);
         //decors
-        await getActions('decors').then(async r => {
-            const price = r.items[0].endingPrice / WEI;
-            if (price < 500 && !DECORS.includes(r.items[0].indexToken)) {
-                DECORS.push(r.items[0].indexToken);
-                await send("DECORS " + r.items[0].tokenId + "  PRICE " + price + " AIRI \nhttps://kawaii-islands.airight.io/auction/" + r.items[0].tokenId + "/" + r.items[0].indexToken);
-            }
-        }).catch(e => {
-            console.log('FETCH ERROR', e)
-        });
-
-        await new Promise(r => setTimeout(r, 10 * 1000));
+        await find('decors', 100);
+        await new Promise(r => setTimeout(r, 5 * 1000));
     }
 
 })();
